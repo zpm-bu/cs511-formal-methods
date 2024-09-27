@@ -1,0 +1,274 @@
+\title{Homework 3}
+\author{Zachary Moring}
+\documentclass{article}
+
+\usepackage{amsmath,amssymb}
+\usepackage{boxproof}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{qtree}
+
+\newcommand{\Hide}[1]{}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\Intro}[1]{{#1}{\textrm{i}}}
+\newcommand{\Elim}[1]{{#1}{\textrm{e}}}
+\newcommand{\Premise}{\textrm{premise}}
+\newcommand{\Assume}{\textrm{assume}}
+
+\newcommand*{\Break}{\vspace{0.2cm}\hrule{}\vspace{0.2cm}}
+
+\begin{document} \maketitle
+
+Code for this assignment is at: \url{https://github.com/zpm-bu/cs511-formal-methods/blob/assignments/lean/Homework/hw3.lean}
+
+\newpage{}
+
+\noindent\textbf{Exercise 1, Part 1.} Write a natural-deduction proof of the
+following WFF: $\varphi_1 \overset{\Delta}{=} \lnot (p \wedge q \wedge r) \to
+(\lnot p \vee \lnot q \vee \lnot r)$, de Morgan's law (4).
+
+\Break{}
+
+\begin{proofbox}
+  \[
+    \label{a1}\: \lnot \left( p \wedge q \wedge r \right) \= \Assume \\
+    \[
+      \label{a2}\: \lnot \left( \lnot p \vee \lnot q \vee \lnot r
+      \right) \= \Assume \\
+      \[
+        \label{a3}\: \lnot r \= \Assume \\
+        \label{a4}\: \lnot p \vee \lnot q \vee \lnot r \=
+        \Intro{\vee}_2~\ref{a3} \\
+        \label{a5}\: \perp \= \Intro{\perp}~\ref{a4},\ref{a2} \\
+      \]
+      \label{a6}\: \lnot \lnot r \= \Intro{\lnot}~\ref{a3}:\ref{a5} \\
+      \label{a7}\: r \= \Elim{\lnot\lnot}~\ref{a6} \\
+      \[
+        \label{a8}\: \lnot p \vee \lnot q \= \Assume \\
+        \label{a9}\: \lnot p \vee \lnot q \vee \lnot r \=
+        \Intro{\vee}_1~\ref{a8} \\
+        \label{a10}\: \perp \= \Intro{\perp}~\ref{a2},\ref{a9} \\
+      \]
+      \label{a11}\: \lnot (\lnot p \vee \lnot q) \=
+      \Intro{\lnot}~\ref{a8}:\ref{a10} \\
+      \[
+        \label{a12}\: \lnot q \= \Assume \\
+        \label{a13}\: \lnot p \vee \lnot q \= \Intro{\vee}_2~\ref{a12} \\
+        \label{a14}\: \perp \= \Intro{\perp}~\ref{a2},\ref{a12} \\
+      \]
+      \label{a15}\: \lnot\lnot q \= \Intro{\lnot}~\ref{a12}:\ref{a14} \\
+      \label{a16}\: q \= \Elim{\lnot\lnot}~\ref{a15} \\
+      \[
+        \label{a17}\: \lnot p \= \Assume \\
+        \label{a18}\: \lnot p \vee \lnot q \= \Intro{\vee}_1~\ref{a17} \\
+        \label{a19}\: \perp \= \Intro{\perp}~\ref{a2},\ref{a18} \\
+      \]
+      \label{a20}\: \lnot\lnot p \= \Intro{\lnot}~\ref{a17}:\ref{a19} \\
+      \label{a21}\: p \= \Elim{\lnot\lnot}~\ref{a19} \\
+      \label{a22}\: p \wedge q \= \Intro{\wedge}~\ref{a16},\ref{a21} \\
+      \label{a23}\: p \wedge q \wedge r \= \Intro{\wedge}~\ref{a22},\ref{a7} \\
+      \label{a24}\: \perp \= \Intro{\perp}~\ref{a1},\ref{a23}
+    \]
+    \label{a25}\: \lnot\lnot(\lnot p \vee \lnot q \vee \lnot r) \=
+    \Intro{\lnot}~\ref{a2}:\ref{a24} \\
+    \label{a26}\: \lnot p \vee \lnot q \vee \lnot r \=
+    \Elim{\lnot\lnot}~\ref{a25} \\
+  \]
+  \: \lnot \left( p \wedge q \wedge r \right) \to (\lnot p \vee \lnot q \vee \lnot r)
+  \= \Intro{\to}~\ref{a1}:\ref{a26}
+\end{proofbox}
+
+\newpage{}
+
+\noindent\textbf{Exercise 1, Part 2.} Write a natural-deduction proof of the
+most generalized form of de Morgan's law (4),
+\[
+  \varphi_2 \overset{\Delta}{=} \lnot(p_1 \wedge p_2 \wedge \dots \wedge p_n)
+  \to (\lnot p_1 \vee \lnot p_2 \vee \dots \vee \lnot p_n).
+\]
+
+\Break{}
+
+\begin{proofbox}
+\[
+  \label{b1}\: \lnot\left( p_1 \wedge \dots \wedge p_n \right) \= \Premise \\
+  \[
+    \label{b2}\: \lnot (\lnot p_1 \vee \dots \vee \lnot p_n) \= \Assume \\
+    \[
+      \label{b3}\: \lnot p_n \= \Assume \\
+      \label{b4}\: \left( \lnot p_1 \vee \dots \right) \vee \lnot p_n \= \Intro{\vee}_2~\ref{b3} \\
+      \label{b5}\: \perp \= \Intro{\perp}~\ref{b2},\ref{b4} \\
+    \]
+    \label{b6}\: \lnot \lnot p_n \= \Intro{\lnot}~\ref{b3}:\ref{b5} \\
+    \label{b7}\: p_n \= \Elim{\lnot\lnot}~\ref{b6} \\
+    \[
+      \label{b8}\: \lnot p_1 \vee \dots \vee \lnot p_{n-1} \= \Assume \\
+      \label{b9}\: \lnot p_1 \vee \dots \vee \lnot p_{n-1} \vee \lnot p_n \= \Intro{\vee}_1~\ref{b8} \\
+      \label{b10}\: \perp \= \Intro{\perp}~\ref{b2},\ref{b9} \\
+    \]
+    \label{b11}\: \lnot (\lnot p_1 \vee \dots \vee \lnot p_{n-1}) \= \Intro{\lnot}~\ref{b8}:\ref{b10} \\
+    \[
+      \label{b12}\: \lnot p_{n-1} \= \Assume \\
+      \label{b13}\: \left( \lnot p_1 \vee \dots \vee \lnot p_{n-2} \right) \vee p_{n-1} \= \Intro{\vee}_2~\ref{b12} \\
+      \label{b14}\: \perp \= \Intro{\perp}~\ref{b11},\ref{b13} \\
+    \]
+    \label{b15}\: \lnot\lnot p_{n-1} \= \Intro{\lnot}~\ref{b12}:\ref{b14} \\
+    \label{b16}\: p_{n-1} \= \Elim{\lnot\lnot}~\ref{b15} \\
+    \: \vdots \= \vdots \\
+    \label{b18}\: p_1 \wedge \dots \wedge p_n \= \Intro{\wedge} \\
+    \label{b19}\: \perp \= \Intro{\perp}~\ref{b1},\ref{b18} \\
+  \]
+  \label{b20}\: \lnot \lnot (\lnot p_1 \vee \dots \vee \lnot p_n) \= \Intro{\lnot}~\textrm{box} \\
+  \label{b21}\: \lnot p_1 \vee \dots \vee \lnot p_n \= \Elim{\lnot\lnot}~\ref{b20} \\
+\]
+  \: \lnot \left( p_1 \wedge \dots \wedge p_n \right) \to (\lnot p_1 \vee \dots \vee \lnot p_n)
+  \= \Intro{\to}~\ref{b1}:\ref{b21}
+\end{proofbox}
+
+\newpage{}
+
+\noindent\textbf{Exercise 1, Part 3.} Show that there is a natural-deduction
+proof of the generalized de Morgan's law (4) whose length (defined as the
+number of lines in the proof) is $O(n)$.
+
+\Break{}
+
+We use the formal proof in Exercise 1, Part 2 as the template for constructing
+a proof in $O(n)$ steps.
+
+Note that, as shown in steps 3-11, we can perform a sequence of conclusions in
+9 steps which strips the last $p_i$ from the $\vee$ sequence and reduces the
+length of the $\vee$ sequence by 1 proposition. We conclude $p_i$ as well as
+$p_1 \vee \dots \vee p_{i-1}$, and repeat. Each of these operations is in
+a constant number of lines, repeated $n$ times, once for each $p$. Our total
+steps is $O(8 \times n) = O(n)$.
+
+Then, we need $n$ additional steps to stitch the various $p_i$ together into
+the conclusion $p_1 \wedge \dots \wedge p_n$, contradicting the premise.
+
+This proof is overall $O(n)$ steps. Thus, by construction, we build a proof of
+$O(n)$ steps.
+
+\newpage{}
+
+\noindent\textbf{Exercise 1, Part 4.} Compare the complexity of
+a natural-deduction proof of $\varphi_2$ and the complexity of a truth-table
+verification of $\varphi_2$.
+
+\Break{}
+
+The natural-deduction proof of $\varphi_2$ can be done in a linear number of
+steps $O(n)$, as demonstrated by construction. The truth-table approach, on the
+other hand, requires a truth table with $2^n$ rows for each combination of the
+$n$ binary-value inputs. As a result, this is a problem for which the
+natural-deduction approach is significantly easier.
+
+\newpage{}
+
+\noindent\textbf{Exercise 2, Part 1.} Use the tableaux method to show the
+validity of the following more general version of de Morgan's law (4):
+\[
+  \varphi_1 \overset{\Delta}{=} \lnot (p \wedge q \wedge r) \to (\lnot p \vee \lnot q \vee \lnot r)
+\]
+
+\Break{}
+
+\Tree [.{$\lnot( \lnot (p \wedge q \wedge r) \to (\lnot p \vee \lnot q \vee \lnot r) )$}
+  [.{$\lnot(p \wedge q \wedge r)$}\\{$\lnot(\lnot p \vee \lnot q \vee \lnot r)$}
+    [.{$\lnot(p \wedge q \wedge r)$}\\{$\lnot(\lnot p \vee \lnot q)$}\\{$\lnot \lnot r$}
+      [.{$\lnot(p \wedge q \wedge r)$}\\{$\lnot\lnot p$}\\{$\lnot \lnot q$}\\{$\lnot \lnot r$}
+        [.{$\lnot (p \wedge q \wedge r)$}\\{$p$}\\{$\lnot \lnot q$}\\{$\lnot\lnot r$}
+          [.{$\lnot (p \wedge q \wedge r)$}\\{$p$}\\{$q$}\\{$\lnot\lnot r$}
+            [.{$\lnot (p \wedge q \wedge r)$}\\{$p$}\\{$q$}\\{$r$}
+              [.{$\lnot(p \wedge q \wedge r)$}\\{$p$}\\{$q$}\\{$r$}
+                [.{$\lnot (p \wedge q)$}
+                  [.{$\lnot p$}\\{\times} ]
+                  [.{$\lnot q$}\\{\times} ]
+                ]
+                [.{$\lnot r$}\\{\times} ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+]
+
+\newpage{}
+
+\noindent\textbf{Exercise 2, Part 2.} Use the tableaux method to show the
+validity of de Morgan's law (4) in general:
+\[
+  \varphi_2 \overset{\Delta}{=} \lnot (p_1 \wedge \dots \wedge p_2) \to
+    (\lnot p_1 \vee \dots \vee \lnot p_n)
+\]
+
+\Break{}
+
+\Tree [.{$\lnot(\lnot(p_1 \wedge \dots \wedge p_n) \to (\lnot p_1 \vee \dots \vee \lnot p_n))$}
+  [.{$\lnot (p_1 \wedge \dots \wedge p_n)$}\\{$\lnot(\lnot p_1 \vee \dots \vee \lnot p_n)$}
+    [.{\textbf{Repeat $n$ times:}}\\{$\lnot (p_1 \wedge \dots \wedge p_n)$}\\{$\lnot(\lnot p_1 \vee \dots \vee \lnot p_{n-1})$}\\{$\lnot \lnot p_n$}
+      [.{$\lnot (p_1 \wedge \dots \wedge p_n)$}\\{$\lnot\lnot p_n$}\\{$\vdots$}\\{$\lnot\lnot p_1$}
+        [.{\textbf{Simplify $n$ times:}}\\{$\lnot (p_1 \wedge \dots \wedge p_n)$}\\{$ p_n$}\\{$\vdots$}\\{$ p_1$}
+          [.{$\lnot(p_1 \wedge \dots \wedge p_{n-1})$}
+            [.{$\lnot (p_1 \wedge \dots \wedge p_{n-2})$}\\{$\vdots$}\\{$\times$} ]
+            [.{$\lnot p_{n-1}$}\\{$\times$} ]
+          ]
+          [.{$\lnot p_n$}\\{$\times$} ]
+        ]
+      ]
+    ]
+  ]
+]
+
+\newpage{}
+
+\noindent\textbf{Exercise 2, Part 3.} Compute the precise size of the tableau
+in Part 2 above, as a function of $n$.
+
+\Break{}
+
+We can enumerate the nodes as follows:
+
+The initial node is the negation of the implication, 1.
+
+The next node is the one below it, splitting the implication into two parts, for
+2 nodes.
+
+Then, we need to add $n$ additional nodes to get the $\lnot \lnot p_i$
+statements, so $n + 2$ nodes so far.
+
+We then need to cancel each of the $\lnot \lnot$ nodes, which agains requires
+$n$ more nodes. That brings the total to $2n + 2$.
+
+That leaves us in a state with $\lnot (p_1 \wedge \dots \wedge p_n)$ and
+the additional $n$ statements $p_i$.
+
+Each simplification from here produces 2 nodes, a left and right branch, which
+immediately close by contradicting one of the $p_i$ statements. That is an
+additional $2n$ nodes, for a total of $4n + 2$.
+
+Lastly, note that the final cancellation is actually $\lnot(p_1 \wedge p_2)$,
+which splits into two branches which immediately close. Thus, there actually
+is no node with $\lnot p_1$ on the right, so we counted 2 too many nodes.
+
+The final node count is $4n$.
+
+\newpage{}
+
+\noindent\textbf{Exercise 2, Problem 4.} Compare the comlexity of the tableau
+proof for $\varphi_2$ in part 2 above with the complexity of the natural
+deduction proof of $\varphi_2$ and the truth-table verification of $\varphi_2$.
+
+\Break{}
+
+As established, both the natural-deduction proof and the tableau proof have
+a linear size complexity (number of steps and nubmer of nodes, respectively).
+This seems to line up with the intuitive expectation that these two methods
+are roughly equivalent.
+
+In both cases, they are more efficient than the truth table, which requires
+$2^n$ rows.
+
+\end{document}
