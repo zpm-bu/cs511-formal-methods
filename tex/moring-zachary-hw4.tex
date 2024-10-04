@@ -1,0 +1,89 @@
+\title{Homework 4}
+\author{Zachary Moring}
+\documentclass{article}
+
+\usepackage{amsmath,amssymb}
+\usepackage{boxproof}
+\usepackage{hyperref}
+\usepackage{tikz}
+
+\newcommand{\Hide}[1]{}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\Intro}[1]{{#1}{\textrm{i}}}
+\newcommand{\Elim}[1]{{#1}{\textrm{e}}}
+\newcommand{\Premise}{\textrm{premise}}
+\newcommand{\Assume}{\textrm{assume}}
+\newcommand*{\Break}{\vspace{0.2cm}\hrule{}\vspace{0.2cm}}
+\newcommand{\tIf}{\text{if }}
+
+\begin{document} \maketitle
+
+Code for this assignment is at: \url{https://github.com/zpm-bu/cs511-formal-methods/blob/assignments/lean/Homework/hw4.lean}
+
+\noindent\textbf{Exercise 1.} Write the WFF $\psi_n$ and justify how
+it accomplishes its task.
+
+\Break{}
+
+The WFF $\psi_n$ is precisely
+\[
+  \psi_n = \psi^\text{row}_n \wedge \psi^\text{col}_n \wedge
+  \psi^\text{diag1}_n \wedge \psi^\text{diag2}_n.
+\]
+
+We define a queen at position $(i_1, j_1)$ to capture another queen at
+position $(i_2, j_2)$ if the two queens are in the same row, column, diagonal,
+or antidiagonal; that is, if $i_1 = i_2$, if $j_1 = j_2$, if $i_1 - j_1 = i_2
+- j_2$, or if $i_1 + j_1 = i_2 + j_2$.
+
+Consider an $n \times n$ board with $n$ queens on it. Assume that each queen
+is in one of $n - k$ rows, $1 \leq k \leq n$. The positions of the queens are
+$(i_1, j_1), \dots, (i_n, j_n)$. By the pigeonhole principle, since we
+distribute $n$ queens among $n - k < n$ rows, at least one row must contain
+at least two queens. Thus $i_a = i_b$ for some $a, b \in \left\{ 1, ..., n
+\right\}$ and thus these two queens capture each other. Thus, if you
+distribute $n$ queens among $n - k$, $1 \leq k \leq n$ rows,
+the board is not a solution. By the contrapositive, a solution must distribute
+the queens among $n$ rows. Therefore, each queen gets her own row and thus
+$\psi^\text{row}_n$ is true.
+
+Likewise, this same argument demonstrates that each queen must have her own
+column, diagonal, and antidiagonal in a solution. Therefore,
+\[
+  \psi_n = \psi^\text{row}_n \wedge \psi^\text{col}_n \wedge
+  \psi^\text{diag1}_n \wedge \psi^\text{diag2}_n.
+\]
+
+
+
+\newpage{}
+
+
+
+\noindent\textbf{Exercise 2.} The formal definition of substitution can be
+simplified if every WFF is such that:
+\begin{enumerate}
+  \item There is at most one \textbf{binding} occurrence ofr the same variable,
+    and
+  \item A variable cannot have both \textbf{free} and \textbf{bound}
+    occurrences.
+\end{enumerate}
+
+Formalize this idea.
+
+\Break{}
+
+Let $\psi$ be a WFF in which (1) there is at most one binding occurence for the
+same variable and (2) no variable has both free and bound occurrences.
+
+Condition (1) removes nesting by preventing the same variable from being used
+multiple times. Thus, our substitution rules do not need to track which
+`version' of the $x$ we are substituting. Condition (2) ensures that we can
+substiute `with confidence,' since it eliminates the possibility of
+accidentally capturing a free variable in a bound substitution.
+
+Thus, substitution in this case can be done by directly rewriting $x$ as
+$u$. Because there is no danger of ambiguity, there is no danger of
+accidentally making an `incorrect' substitution.
+
+\end{document}
