@@ -127,3 +127,7 @@ example {k l m : ℤ} (h1 : k ∣ l) (h2 : l ^ 3 ∣ m) : k ^ 3 ∣ m := by
     m = l ^ 3 * n2 := by apply hn2
     _ = (k * n1) ^ 3 * n2 := by rw [hn1]
     _ = k ^ 3 * (n1 ^ 3 * n2) := by ring
+
+
+example {k l m : ℤ} (h1 : k ∣ l) (h2 : l ^ 3 ∣ m) : k ^ 3 ∣ m := by
+  dsimp [(.∣.)] at *

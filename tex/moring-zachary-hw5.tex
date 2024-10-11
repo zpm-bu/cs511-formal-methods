@@ -1,0 +1,129 @@
+\documentclass{article}
+\title{Homework 4}
+\author{Zachary Moring}
+
+\usepackage{amsmath,amssymb}
+\usepackage{boxproof}
+\usepackage{hyperref}
+\usepackage{tikz}
+
+\newcommand{\Hide}[1]{}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\Intro}[1]{{#1}{\textrm{i}}}
+\newcommand{\Elim}[1]{{#1}{\textrm{e}}}
+\newcommand{\Premise}{\textrm{premise}}
+\newcommand{\Let}{\textrm{let}}
+\newcommand{\Assume}{\textrm{assume}}
+\newcommand{\Break}{\vspace{0.2cm}\hrule{}\vspace{0.2cm}}
+\newcommand{\tIf}{\text{if }}
+\newcommand{\all}{\forall}
+
+\begin{document} \maketitle
+
+Code for this assignment is at:
+\url{https://github.com/zpm-bu/cs511-formal-methods/blob/assignments/lean/Homework/hw5.lean}
+
+\vspace{1in}
+
+\noindent\textbf{Exercise 1a.} Prove the validity of the following sequent:
+\[
+  (y \approx 0) \wedge (y \approx x) \vdash 0 \approx x
+\]
+
+\Break{}
+
+\begin{proofbox}
+  \: (y \approx 0) \wedge (y \approx x) \= \Premise \\
+  \: y \approx 0 \= \Elim{\wedge}_1~1 \\
+  \: y \approx x \= \Elim{\wedge}_2~1 \\
+  \: 0 \approx x \= \Elim{\approx}~2,3~(\varphi := y \approx x; t_1
+  := y; t_2 := 0)\\
+\end{proofbox}
+
+\newpage{}
+
+\noindent\textbf{Exercise 1b.} Prove the validity of the following sequent:
+\[
+  t_1 = t_2 \vdash (t + t_2) = (t + t_1)
+\]
+
+\Break{}
+
+I'm definitely not sure about this one.  Can we introduce an
+arbitrary symbol like this?
+
+\begin{proofbox}
+  \: t_1 \approx t_2 \= \Premise \\
+  t + t_2 \: \Let \\
+  \: t + t_2 \approx t + t_2 \= \Intro{\approx}~2 \\
+  \: t + t_1 \approx t + t_2 \= \Elim{\approx}~1,3~(\varphi := t +
+  t_2 \approx t + t_2; t_1 := t_2; t_2: t_1) \\
+\end{proofbox}
+
+\newpage{}
+
+\noindent\textbf{Exercise 2a.} Prove the validity of the following sequent:
+\[
+  (\exists x (S \to Q(x)) \vdash S \to \exists x Q(x)
+\]
+
+\Break{}
+
+\begin{proofbox}
+  \: \exists x (S \to Q(x)) \= \Premise \\
+  \[
+    \: S \= \Assume \\
+    \[
+      x_0 \: \Let \\
+      \: S \to Q(x_0) \= \Assume \\
+      \: Q(x_0) \= \Elim{\to}~2,4 \\
+      \: \exists x (Q(x)) \= \Intro{\exists}~5 \\
+    \]
+    \: \exists x (Q(x)) \= \Elim{\exists}~1,3:6 \\
+  \]
+  \: S \to \exists x (Q(x)) \= \Intro{\to}~2:7 \\
+\end{proofbox}
+
+\newpage{}
+
+\noindent\textbf{Exercise 2d.} Prove the validity of the following sequent:
+\[
+  \all x (P(x)) \to S \vdash \exists x (P(x) \to S)
+\]
+
+\Break{}
+
+\begin{proofbox}
+  \: \all x (P(x)) \to S \= \Premise \\
+  \[
+    \: \lnot \exists x (P(x) \to S) \= \Assume \\
+    \[
+      x_0 \: \Let \\
+      \[
+        \: \lnot P(x_0) \= \Assume \\
+        \[
+          \: P(x_0) \= \Assume \\
+          \: \perp \= \Intro{\perp}~4,5 \\
+          \: S \= \Elim{\perp} \\
+        \]
+        \: P(x_0) \to S \= \Intro{\to}~5:7 \\
+        \: \exists x (P(x) \to S) \= \Intro{\exists}~8 \\
+        \: \perp \= \Intro{\perp}~2,8 \\
+      \]
+      \: \lnot \lnot P(x_0) \= \Intro{\lnot}~4:10 \\
+      \: P(x_0) \= \Elim{\lnot\lnot} \\
+    \]
+    \: \all x (P(x)) \= \Intro{\all}~3:12~(\varphi := P(x_0)) \\
+    \[
+      \: P(x_0) \= \Elim{\all}~13 \\
+      \: S \= \Elim{\to}~1,13 \\
+    \]
+    \: P(x_0) \to S \= \Intro{\to}~14:15 \\
+    \: \exists x (P(x) \to S) \= \Intro{\exists}~16 \\
+    \: \perp \= \Intro{\perp}~2:17 \\
+  \]
+  \: \lnot \lnot \exists x (P(x) \to S) \= \Intro{\lnot}~2:18 \\
+  \: \exists x (P(x) \to S) \= \Elim{\lnot\lnot}~19 \\
+\end{proofbox}
+
+\end{document}
