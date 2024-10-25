@@ -1,0 +1,115 @@
+\documentclass{article}
+\title{Homework 7}
+\author{Zachary Moring}
+
+\usepackage{amsmath,amssymb}
+\usepackage{boxproof}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{forest}
+
+\newcommand{\Hide}[1]{}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\Intro}[1]{{#1}{\textrm{i}}}
+\newcommand{\Elim}[1]{{#1}{\textrm{e}}}
+\newcommand{\Premise}{\textrm{premise}}
+\newcommand{\Let}{\textrm{let}}
+\newcommand{\Assume}{\textrm{assume}}
+\newcommand{\Break}{\vspace{0.2cm}\hrule{}\vspace{0.2cm}}
+\newcommand{\tIf}{\text{if }}
+\newcommand{\all}{\forall}
+
+\begin{document} \maketitle
+
+Code for this assignment is at:
+\url{https://github.com/zpm-bu/cs511-formal-methods/blob/assignments/lean/Homework/hw7.lean}
+
+\newpage{}
+
+\vspace{1in}
+
+\noindent\textbf{Exercise 1.} Use first-order ground tableaux to show that
+$\Gamma \vDash \varphi$ where
+\[
+  \Gamma \overset{\text{def}}{=} \left\{ \forall x \forall y \forall z
+  \left( P(x, y) \wedge P(y, z) \to P(x, z) \right), \forall x \forall y
+  \left( P(x, y) \to P(y, x) \right) \right\}
+\]
+and
+\[
+  \varphi \overset{\text{def}}{=} \forall x \forall y \forall z \left(
+  P(x, y) \wedge P(z, y) \to P(x, z) \right)
+\]
+and $P$ is an arbitrary binary predicate.
+
+\Break{}
+
+\scalebox{0.7}{
+  \begin{forest}
+    [$\Gamma \cup \{ \varphi \}$
+    [{$\forall x \forall y \forall z (P(x, y) \wedge P(y, z) \to P(x, z))$}
+    [{$\forall y \forall z (P(t, y) \wedge P(y, z) \to P(t, z))$}
+    [{$\forall z (P(t, u) \wedge P(u, z) \to P(t, z))$}
+    [{$P(t, u) \wedge P(u, v) \to P(t, v)$}
+    [{$\lnot \forall x \forall y \forall z (P(x, y) \wedge P(z, y) \to P(x, z))$}
+    [{$\lnot \forall y \forall z (P(t, y) \wedge P(z, y) \to P(t, z))$}
+    [{$\lnot \forall z P(t, u) \wedge P(z, u) \to P(t, z)$}
+    [{$\lnot (P(t, u) \wedge P(v, u) \to P(t, v))$}
+    [{$P(t, u) \wedge P(v, u)$}
+    [{$\lnot P(t, v)$}
+    [{$P(t, u)$}
+    [{$P(v, u)$}
+    [{$\forall x \forall y P(x, y) \to P(y, x)$}
+    [{$\forall y P(v, y) \to P(y, v)$}
+    [{$P(v, u) \to P(u, v)$}
+    [{$\lnot (P(t, u) \wedge P(u, v))$}
+    [{$\lnot P(t, u)$}\\{$\times$} ]
+    [{$\lnot P(u, v)$}
+    [{$\lnot P(v, u)$}\\{$\times$} ]
+    [{$P(u, v)$}\\{$\times$} ]
+    ]
+    ]
+    [{$P(t, v)$}\\{$\times$} ]
+    ] ] ] ] ] ] ] ] ] ] ] ] ] ] ] ]
+  \end{forest}
+}
+
+\newpage{}
+
+\noindent\textbf{Exercise 2.} Use first-order ground tableaux to show...
+
+\Break{}
+
+\scalebox{0.7}{
+  \begin{forest}
+    [$\Gamma \cup \{ \varphi \}$
+    [{$\forall x Q(x, a, a)$}
+    [{$Q(a, s^2(a), s^2(a))$}
+    [{$\forall x \forall y \forall z (Q(x, y, z) \to Q(x, s(y), s(z)))$}
+    [{$\forall x \forall y \forall z (Q(x, y, z) \to Q(y, x, z))$}
+    [{$\lnot \exists x Q(s^2(a), s^3(a), x)$}
+    [{$\lnot Q(s^2(a), s^3(a), s^5(a))$}
+    [{$\forall y \forall z ( Q(a, y, z) \to Q(y, a, z) )$}
+    [{$\forall z (Q(a, s^2(a), z) \to Q(s^2(a), a, z))$}
+    [{$Q(a, s^2(a), s^2(a)) \to Q(s^2(a), a, s^2(a))$}
+    [{$\forall y \forall z Q(s^2(a), y, z) \to Q(s^2(a), s(y), s(z))$}
+    [{$\forall z Q(s^2(a), a, z) \to q(s^2(a), s(a), s(z))$}
+    [{$Q(s^2(a), a, s^2(a)) \to Q(s^2(a), s(a), s^3(a))$}
+    [{$Q(s^2(a), s(a), s^3(a)) \to Q(s^2(a), s^2(a), s^4(a))$}
+    [{$Q(s^2(a), s^2(a), s^4(a)) \to Q(s^2(a), s^3(a), s^5(a))$}
+      [{$\lnot Q(a, s^2(a), s^2(a)) \times$} ]
+      [{$Q(s^2(a), a, s^2(a))$}
+        [{$\lnot Q(s^2(a), a, s^2(a)) \times$} ]
+        [{$Q(s^2(a), s(a), s^3(a))$}
+          [{$\lnot Q(s^2(a), s(a), s^3(a)) \times$} ]
+          [{$Q(s^2(a), s^2(a), s^4(a))$}
+            [{$\lnot Q(s^2(a), s^2(a), s^4(a)) \times$} ]
+            [{$Q(s^2(a), s^3(a), s^5(a)) \times$} ]
+          ]
+        ]
+      ]
+    ] ] ] ] ] ] ] ] ] ] ] ] ] ] ]
+  \end{forest}
+}
+
+\end{document}
