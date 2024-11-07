@@ -1,0 +1,198 @@
+\documentclass{article}
+\title{Homework 8}
+\author{Zachary Moring}
+
+\usepackage{amsmath,amssymb}
+\usepackage{boxproof}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{forest}
+\usepackage{enumitem}
+
+\newcommand{\Hide}[1]{}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\Intro}[1]{{#1}{\textrm{i}}}
+\newcommand{\Elim}[1]{{#1}{\textrm{e}}}
+\newcommand{\Premise}{\textrm{premise}}
+\newcommand{\Let}{\textrm{let}}
+\newcommand{\Assume}{\textrm{assume}}
+\newcommand{\Break}{\vspace{0.2cm}\hrule{}\vspace{0.2cm}}
+\newcommand{\tIf}{\text{if }}
+\newcommand{\all}{\forall}
+
+\begin{document} \maketitle
+
+Code for the Lean portion is here: \url{https://github.com/zpm-bu/cs511-formal-methods/blob/assignments/lean/Homework/hw8.lean}
+
+\vspace{2cm}
+
+\noindent\textbf{Exercise 2.2.3a.} Which of the following strings are formulae
+in predicate logic? Specify a reason for failure for strings which aren't;
+draw parse trees for all strings which are.
+
+\Break{}
+
+\noindent\textbf{i.} Yes.
+
+\begin{center}
+  \begin{forest}
+    [$S$ [$m$ ] [$x$ ] ]
+  \end{forest}
+\end{center}
+
+\noindent\textbf{ii.} Yes.
+
+\begin{center}
+  \begin{forest}
+    [$B$ [$m$ ] [$f$ [$m$ ] ] ]
+  \end{forest}
+\end{center}
+
+\noindent\textbf{iii.} $f(m)$ is not a predicate; it is a function applied to
+a constant, also producing a constant.
+
+\noindent\textbf{iv.} $B(B(m, x), y)$ is not a formula. Our definition in the
+book for a formula requires that a predicate apply to \textit{terms}, and
+$B(m, x)$ is not a \textit{term}, it is a predicate.
+
+I don't actually UNDERSTAND the difference very well, but the definition 2.3.
+is pretty clear about this restriction. No nesting predicates.
+
+\noindent\textbf{v.} $S(B(m), z)$ is not a formula. $S$ and $B$ are both
+predicates and we cannot nest predicates inside each other.
+
+\newpage{}
+
+\noindent\textbf{vi.} Yes.
+
+\begin{center}
+  \begin{forest}
+    [$\to$
+      [$B$ [$x$ ] [$y$ ] ]
+      [$\exists z$ [$S$ [$z$ ] [$y$ ] ] ]
+    ]
+  \end{forest}
+\end{center}
+
+
+\noindent\textbf{vii.} Yes.
+
+\begin{center}
+  \begin{forest}
+    [$\to$
+      [$S$ [$x$ ] [$y$ ] ]
+      [$S$ [$y$ ] [$f$ [$f$ [$x$ ] ] ] ]
+    ]
+  \end{forest}
+\end{center}
+
+\noindent\textbf{viii.} No. You cannot nest predicates.
+
+\newpage{}
+
+\noindent\textbf{Exercise 2.2.3b.} Let $c$ and $d$ be constants, $f$ a function
+symbol with one argument, $g$ a function with two arguments, and $h$ a function
+symbol with three arguments. Also let $P$ and $Q$ be predicate symbols with
+three arguments. Which of the following are formulae? Draw a parse tree if so.
+If not, describe why.
+
+\Break{}
+
+\noindent\textbf{i.} No. There is an unbound and undefined $y$ as the third
+argument for $h$.
+
+\noindent\textbf{ii.} No. As above, there is an unbound and undefined $y$.
+
+\noindent\textbf{iii.} Yes.
+
+\begin{center}
+  \begin{forest}
+    [$\forall x$
+      [$Q$
+        [$g$
+          [$h$ [$x$ ] [$f$ [$d$ ] ] [$x$ ] ]
+          [$g$ [$x$ ] [$x$ ] ]
+        ]
+        [$h$ [$x$ ] [$x$ ] [$x$ ] ]
+        [$c$ ]
+      ]
+    ]
+  \end{forest}
+\end{center}
+
+\noindent\textbf{iv.} No. $P$ requires three arguments, so the statement is not
+well-formed.
+
+\noindent\textbf{v.} No, I don't think so. The left hand of the implication is
+$g(x, y)$, which is not a predicate -- it is a formula evaluation. Thus, there
+is not a way to assign a 'truth value' to the left hand side and the
+implication is not well-formed.
+
+\noindent\textbf{vi.} Yes.
+
+\begin{center}
+  \begin{forest}
+    [$Q$ [$c$ ] [$d$ ] [$c$ ] ]
+  \end{forest}
+\end{center}
+
+\newpage{}
+
+\noindent\textbf{Exercise 2.3.2} Recall that we use $\approx$ to express the
+equality of elements in our models. Consider the formula
+\[
+  \exists x \exists y \left( \lnot (x \approx y) \wedge (\forall z ((z \approx x) \vee (z \approx y))) \right)
+\]
+
+In plain English, what does this formula specify?
+
+\Break{}
+
+In this universe, there are two elements $x$ and $y$ which are not related to
+each other. Every other element is related to $x$ or to $y$. Thus, the space
+is partitioned into two parts: The $x$ part and the $y$ part. Under $\approx$,
+we can say that the set only has two elements.
+
+\vspace{1in}
+
+\noindent\textbf{Exercise 2.3.3.} Try to write down a sentence of predicate
+logic which intuitively holds in a model if and only if the model has
+(respectively):
+
+\begin{enumerate}[label=(\alph*)]
+  \item Exactly three distinct elements.
+  \item At most three distinct elements.
+  \item At least three distinct elements.
+\end{enumerate}
+
+\Break{}
+
+\noindent\textbf{(a)} Consider
+\begin{align*}
+  \exists x \exists y \exists z (
+      &\lnot (x \approx y) \wedge \lnot (x \approx z) \wedge \lnot (y \approx z) \\
+      &\wedge \forall w ( (w \approx x) \vee (w \approx y) \vee (w \approx z))) \\
+\end{align*}
+
+\noindent\textbf{(b)} Here's what I thought of: There are \textit{not} four
+elements.
+
+\begin{align*}
+  \lnot \exists w \exists x \exists y \exists z (
+    &\lnot (w \approx x) \\
+    &\lnot (w \approx y) \\
+    &\lnot (w \approx z) \\
+    &\lnot (x \approx y) \\
+    &\lnot (x \approx z) \\
+    &\lnot (y \approx z) ) \\
+\end{align*}
+
+\noindent\textbf{(c)} At \textit{least} three elements should be the same as
+part (a), but without the universal binding.
+
+\[
+  \exists x \exists y \exists z (\lnot (x \approx y) \wedge \lnot (x \approx z)
+  \wedge \lnot (y \approx z))
+\]
+
+\end{document}

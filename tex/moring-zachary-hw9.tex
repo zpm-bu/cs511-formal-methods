@@ -1,0 +1,113 @@
+\documentclass{article}
+\title{Homework 9}
+\author{Zachary Moring}
+
+\usepackage{amsmath,amssymb}
+\usepackage{boxproof}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{forest}
+\usepackage{enumitem}
+
+\newcommand{\Hide}[1]{}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\Intro}[1]{{#1}{\textrm{i}}}
+\newcommand{\Elim}[1]{{#1}{\textrm{e}}}
+\newcommand{\Premise}{\textrm{premise}}
+\newcommand{\Let}{\textrm{let}}
+\newcommand{\Assume}{\textrm{assume}}
+\newcommand{\Break}{\vspace{0.2cm}\hrule{}\vspace{0.2cm}}
+\newcommand{\tIf}{\text{if }}
+\newcommand{\all}{\forall}
+
+\begin{document} \maketitle
+
+Code for the Lean portion is here:
+\url{https://github.com/zpm-bu/cs511-formal-methods/blob/assignments/lean/Homework/hw9.lean}
+
+\vspace{2cm}
+
+\noindent\textbf{Exercise 1.} The notion of \textit{two-colorable simple graphs}
+coincides with the notion of \textit{bipartite simple graphs}. Write an infinite
+set $\Gamma_\text{bip}$ of first-order sentences such that, for every simple
+graph $G$, it holds that $G \vDash \Gamma_\text{bip}$ if and only if $G$ is
+bipartite.
+
+\Break{}
+
+Thanks to the hint, we know that a graph $G$ is bipartite if and only if
+every cycle in $G$ is even. An equivalent statement is that \textit{no} cycle
+in $G$ is odd, which will be easier for us to model in sentences.
+
+This allows us to build a simple set $\Gamma_\text{bip}$ which encodes this
+statement. Let $\varphi_n$ be the sentence "$G$ has a cycle of length $n$",
+which then gives us
+
+\[
+  \Gamma_\text{bip} \overset{def}{=} \left\{ \lnot \varphi_3, \lnot \varphi_5,
+  \lnot \varphi_7, \dots \right\}
+\]
+
+\newpage{}
+
+\noindent\textbf{Exercise 2.} Consider the three sentences
+\begin{align*}
+  \varphi_1 &\overset{\text{def}}{=} \forall x P(x, x)\\
+  \varphi_2 &\overset{\text{def}}{=} \forall x \forall y (P(x, y) \to P(y, x))\\
+  \varphi_3 &\overset{\text{def}}{=} \forall x \forall y \forall z
+             ((P(x, y) \wedge P(y, z)) \to P(x, z))
+\end{align*}
+which express that the binary predicate $P$ is reflexive, symmetric, and
+transitive, respectively. Show that none of these sentences is semantically
+entailed by the other ones by choosing for each pair of sentences a model
+which satisfies that pair, but not the third. (That is, find three binary
+relations, each satisfying only two of the three properties).
+
+\Break{}
+
+\textbf{(Reflexive and symmetric but not transitive.)} Consider the real
+numbers $\mathbb{R}$ and the simple distance metric $d(x, y) = |x - y|$. Say
+that two points are related if $d(x, y) < 1$. Let $x, y, z \in \mathbb{R}$.
+
+\begin{itemize}
+  \item The relationship is \textit{reflexive} since each point is distance 0
+    to itself.
+  \item The relationship is \textit{symmetric} since the distance is absolute.
+  \item The relationship is \textit{not transitive}. Let $x < y$ and $d(x,y)
+    > 0.5$, and $y < z$ and $d(y, z) > 0.5$. Then $x$ and $z$ are on opposite
+    ``sides'' of $y$ so their distance is $d(x, y) + d(y, z) > 1$ and thus
+    $x$ and $z$ are not related.
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{(Reflexive and transitive but not symmetric.)} Consider the simple
+relationship $\leq$ on the integers.
+
+\begin{itemize}
+  \item The relationship is \textit{reflexive}, since $n \leq n$ for all $n \in
+    \mathbb{Z}$.
+  \item The relationship is \textit{transitive}: $x \leq y$ and $y \leq z$,
+    then $x \leq z$.
+  \item The relationship is \textit{not symmetric}. Note $2 \leq 3$ but $3
+    > 2$.
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{(Symmetric and transitive but not reflexive.)} Consider the non-negative
+integers $\mathbb{N}_{+0}$. Define the relationship $\sim$ as the "nonzero
+product" relationship: $n \sim m$ if $nm > 0$.
+
+\begin{itemize}
+  \item The relationship is \textit{symmetric}, since integer multiplication is
+    symmetric.
+  \item The relationship is \textit{transitive}. If $n \sim m$ then $n, m > 0$
+    and likewise if $m \sim \ell$ then $m, \ell > 0$. Thus $n\ell > 0$ and so
+    $n \sim \ell$.
+  \item The relationship is \textit{not reflexive}. $0 \not\sim 0$. (In fact,
+    $0 \not\sim n$ for all $n$, but this is the specific sub-behavior that is
+    useful here.)
+\end{itemize}
+\end{document}
