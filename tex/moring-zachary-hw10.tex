@@ -1,0 +1,126 @@
+\documentclass{article}
+\title{Homework 10}
+\author{Zachary Moring}
+
+\usepackage{amsmath,amssymb}
+\usepackage{boxproof}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{forest}
+\usepackage{enumitem}
+
+\newcommand{\Hide}[1]{}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\Intro}[1]{{#1}{\textrm{i}}}
+\newcommand{\Elim}[1]{{#1}{\textrm{e}}}
+\newcommand{\Premise}{\textrm{premise}}
+\newcommand{\Let}{\textrm{let}}
+\newcommand{\Assume}{\textrm{assume}}
+\newcommand{\Break}{\vspace{0.2cm}\hrule{}\vspace{0.2cm}}
+\newcommand{\tIf}{\text{if }}
+\newcommand{\all}{\forall}
+\newcommand{\defas}{\overset{\text{def}}{=}}
+
+\newcommand{\scrM}{\mathcal{M}}
+
+\begin{document} \maketitle
+
+Code for the Lean portion is here:
+\url{https://github.com/zpm-bu/cs511-formal-methods/blob/assignments/lean/Homework/hw10.lean}
+
+\vspace{2cm}
+
+\noindent\textbf{Exercise 1.} If $\scrM$ is a relational structure, the
+first-order theory of $\scrM$ is:
+\[
+  \text{Th}(\scrM) \defas \left\{ \varphi ~\middle|~
+  \varphi \text{ is a first-order sentence s.t. } \scrM \vDash \varphi
+  \right\}
+\]
+Is $\text{Th}(\scrM)$ deductively closed?
+
+\Break{}
+
+% Note: A set T is /deductively closed/ if it contains every formula φ that can
+% be logically deduced from T; that is, T ⊢ φ ⊃ φ ∈ T
+
+Because we are dealing with first-order sentences, completeness tells us that
+$\scrM \vDash \varphi$ is equivalent to $\scrM \vdash \varphi$.
+Thus, every statement $\varphi \in \text{Th}(\scrM)$ is also in
+$\overline{\scrM}$.
+
+The same is true \textit{mutatis mutandis} to show that every statement $\psi
+\in \overline{\scrM}$ is also an element of $\text{Th}(\scrM)$.
+
+Thus by double containment, $\text{Th}(\scrM)$ is deductively closed.
+
+\newpage{}
+
+\noindent\textbf{Exercise 2.1.} Write a first-order sentence $\varphi_1$ which,
+in any $\Sigma\prime$ structure $\scrM$ satisfying $\Gamma$, asserts
+``every vertex has at least one of the colors: blue, green, purple, or
+yellow.''
+
+\Break{}
+
+\[
+  \varphi_1 \defas \forall v.~B(v) \vee G(v) \vee P(v) \vee Y(v)
+\]
+
+\vspace{2cm}
+
+\noindent\textbf{Exercise 2.2.} Write a first-order sentence $\varphi_2$ which
+asserts ``every vertex has at most one color.''
+
+\Break{}
+
+This is a little brute-force, but it seems like the most straightforward way
+to handle it:
+
+\begin{align*}
+  \varphi_2 \defas \forall v.~ &\lnot(B(v) \wedge G(v))~\wedge~ \lnot(B(v)
+  \wedge P(v)) ~\wedge~ \lnot(B(v) \wedge Y(v)) ~\wedge~ \\
+  & \lnot(G(v) \wedge P(v)) ~\wedge~ \lnot(G(v) \wedge Y(v)) ~\wedge~
+  \lnot(P(v) \wedge Y(v))
+\end{align*}
+
+\vspace{2cm}
+
+\noindent\textbf{Exercise 2.3.} Write a first-order sentence $\varphi_3$ which
+asserts ``no two adjacent vertices have the same color.''
+
+\Break{}
+
+Again, the most straightforward rule is kind of a brute-force approach, but it
+definitely \textit{works}:
+
+\begin{align*}
+  \varphi_3 \defas \forall u \forall v.~ &R(u, v) \to \lnot(B(u) \wedge B(v))
+  ~\wedge~ \lnot(G(u) \wedge G(v)) ~\wedge~ \\
+  &\lnot(P(u) \wedge P(v)) ~\wedge~ \lnot(Y(u) \wedge Y(v)) \\
+\end{align*}
+
+\newpage{}
+
+\noindent\textbf{Exercise 2.4.} Show that if $\scrM$ is an infinite
+planar graph then there is a $\Sigma$-structure $\scrM\prime$ which
+expands $\scrM$ with four unary relations $B^{\scrM\prime}$, $G^{\scrM\prime}$,
+$P^{\scrM\prime}$, $Y^{\scrM\prime}$ and which satisfies $\varphi_1 \wedge
+\varphi_2 \wedge varphi_3$; that is, $\scrM\prime$ is four-colorable and thus
+$\scrM$ is also four-colorable.
+
+\Break{}
+
+In Chapter 4, we are given the fact that every finite planar graph is
+4-colorable. We will rely on that fact here.
+
+Consider a finite subset of $\scrM\prime$, the finite graph $M$. Because
+$\scrM\prime$ is planar, $M$ is also planar. So $M$ is a finite planar graph
+and thus $M$ is four-colorable. Thus, $M \vDash \varphi_1 \wedge \varphi_2
+\wedge \varphi_3$.
+
+Therefore since $M$ is an arbitrary finite submodel of $\scrM\prime$, by
+compactness, there exists a finite model of a four-coloring for $\scrM\prime$.
+
+\end{document}
