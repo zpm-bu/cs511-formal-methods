@@ -1,0 +1,75 @@
+\documentclass{article}
+\title{Homework 12}
+\author{Zachary Moring}
+
+\usepackage{amsmath,amssymb}
+\usepackage{boxproof}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{forest}
+\usepackage{enumitem}
+
+\newcommand{\Hide}[1]{}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\Intro}[1]{{#1}{\textrm{i}}}
+\newcommand{\Elim}[1]{{#1}{\textrm{e}}}
+\newcommand{\Premise}{\textrm{premise}}
+\newcommand{\Let}{\textrm{let}}
+\newcommand{\Assume}{\textrm{assume}}
+\newcommand{\Break}{\vspace{0.2cm}\hrule{}\vspace{0.2cm}}
+\newcommand{\tIf}{\text{if }}
+\newcommand{\all}{\forall}
+\newcommand{\defas}{\overset{\text{def}}{=}}
+
+\begin{document} \maketitle
+
+Code for the Lean portion is here:
+\url{https://github.com/zpm-bu/cs511-formal-methods/blob/assignments/lean/Homework/hw12.lean}
+
+\vspace{2cm}
+
+\noindent\textbf{Exercise 1.} Define $X \sim Y$ in second-order logic using a
+unary function $F : X → Y$ which is both injective and surjective.
+
+\Break{}
+
+\begin{align*}
+  X \sim Y \longleftrightarrow &\exists F (\forall x \in X (F(x) \in Y) \\
+  &\wedge \forall x_1, x_2 \in X (F(x_1) \approx F(x_2) \to x_1 \approx x_2)\\
+  &\wedge \forall y \in Y (\exists x \in X (F(x) \approx y)))
+\end{align*}
+
+\newpage{}
+
+\noindent\textbf{Exercise 2.} A set $Y$ is ``countably infinite'' if $Y$ is
+infinite and for every infinite subset $X$ of $Y$, there is a bijection from
+$X$ to $Y$.
+
+\textbf{(a)} Define a second-order sentence $\Psi_{\text{countably
+inft}}$ such that $\mathcal{A} \vDash \Psi_{\text{countably inft}}$ if and only
+if $\mathcal{A}$ is countably infinite.
+
+\textbf{(b)} Define a second-order sentence $\Psi_{\text{uncountably
+inft}}$ such that $\mathcal{A} \vDash \Psi_{\text{uncountably inft}}$ if and
+only if $\mathcal{A}$ is uncountably infinite.
+
+\Break{}
+
+Consider
+\begin{align*}
+  \Psi_{\text{countably inft}}(Y) \defas &\Psi_{\text{infinite}}(Y) \\
+  &\wedge \forall S \subseteq Y (\Psi_\text{infinite}(S) \to \\
+  &\exists f : S \to Y (\forall s_1, s_2 (f(s_1) \approx f(s_2) \to s_1 \approx s_2) \\
+  &\forall y \in Y (\exists s \in S (f(s) \approx y))))\\
+\end{align*}
+and
+\[
+  \Psi_\text{uncountably inft}(Y) \defas \Psi_\text{infinite}(Y) \wedge \lnot
+  \Psi_\text{countably inft}(Y)
+\]
+
+Since countable infinity is the ``smallest'' infinite cardinality, any infinite
+set which is not countable is, by definition, uncountably infinite.
+
+\end{document}
