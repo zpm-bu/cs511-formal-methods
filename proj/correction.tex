@@ -1,0 +1,38 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{tikz}
+\usepackage{quiver}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+\title{Correction to Exercise 2}
+
+\begin{document} \maketitle
+
+Hello all.
+
+Please use \textit{this} graph as the correct version of $K$:
+
+\[\begin{tikzcd}
+	&& B \\
+	\\
+	A &&&& C \\
+	\\
+	&& D
+	\arrow["k"{description}, from=1-3, to=3-5]
+	\arrow["f"{description}, curve={height=-6pt}, from=3-1, to=1-3]
+	\arrow["g"{description}, curve={height=6pt}, from=3-1, to=1-3]
+	\arrow["h"{description}, from=3-1, to=3-5]
+	\arrow["j"{description}, curve={height=6pt}, from=3-1, to=5-3]
+	\arrow["i"{description}, curve={height=-6pt}, from=3-1, to=5-3]
+	\arrow["l", from=5-3, to=3-5]
+\end{tikzcd}\]
+
+Compared to the original, you will note that $g$ and $j$ are inverted. This
+eliminates the $A \to B \to A$ and $A \to D \to A$ cycles, which I did not
+intend.
+
+This diagram should correctly give 15 morphisms.
+
+\end{document}
